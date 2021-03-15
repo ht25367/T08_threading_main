@@ -36,7 +36,16 @@ def main():
 		# 指定したページのデータ(会社名・勤務地)を取得するスレッド
 		ts[i%t_cnt] = threading.Thread(target=mynavi_search.get_elm,args=(drivers[i%t_cnt],i+1,))
 		ts[i%t_cnt].start()
-		
+	
+
+
+	[t.join() for t in ts]
+
+	#csvファイルをページ順に並び替える
+	pd_data = pd.read_csv("t08_Recruit_data.csv")
+	sort_data = pd_data.sort_values(by=["page"])
+	pd_data = sort_data.reset_index(drop=True)
+	pd_data.to_csv("t08_Recruit_data.csv")
 
 
 if __name__ == "__main__":

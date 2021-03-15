@@ -73,6 +73,7 @@ def get_elm(driver,page):
 		search_dict["会社名"].append(name.text[:10])
 		search_dict["勤務地"].append(office.text[:10])
 	
+	
 	# csvファイル保存
 	recruit_pd = pd.DataFrame(search_dict)
 	recruit_pd.to_csv("t08_Recruit_data.csv",mode = "a",header=False,index=False)
