@@ -1,7 +1,7 @@
 import os
 from selenium.webdriver import Chrome, ChromeOptions
-import time
 from webdriver_manager.chrome import ChromeDriverManager
+import time
 import pandas as pd
 
 
@@ -47,8 +47,7 @@ def set_keyword(keyword,queue):
 
 
 # 指定したページのデータ(会社名・勤務地)を取得する関数
-def get_elm(driver,page,queue):
-	search_dict = {"page":[],"会社名":[],"勤務地":[]}
+def get_elm(driver,page):
 
 	#ページを移動
 	url = driver.current_url
@@ -68,6 +67,7 @@ def get_elm(driver,page,queue):
 	# elementsを取得 tr[1仕事内容、2対象となる方、3勤務地、4給与、5初年度年収]
 	name_elm = driver.find_elements_by_class_name("cassetteRecruit__name")
 	office_elm=driver.find_elements_by_css_selector(".tableCondition tbody tr:nth-child(3) td")
+	search_dict = {"page":[],"会社名":[],"勤務地":[]}
 	for name,office in zip(name_elm,office_elm):
 		search_dict["page"].append(page)
 		search_dict["会社名"].append(name.text[:10])
@@ -75,7 +75,7 @@ def get_elm(driver,page,queue):
 	
 	# csvファイル保存
 	recruit_pd = pd.DataFrame(search_dict)
-	recruit_pd.to_csv("t08_Recruit_data.csv",mode = "a",header=False)
+	recruit_pd.to_csv("t08_Recruit_data.csv",mode = "a",header=False,index=False)
 
 	print(f"page:{page}, {len(name_elm)}件")
-	# queue.put({"name":name_elm,"office":office_elm})
+
