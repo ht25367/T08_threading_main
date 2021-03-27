@@ -21,7 +21,7 @@ def main():
 	keyword = "長野"
 
 	# t_cnt = input("並列処理を行うスレッド数を入力して下さい:")
-	t_cnt = 2
+	t_cnt = 3
 
 	for i in range(page):
 		if i < t_cnt:
@@ -30,7 +30,7 @@ def main():
 			t = threading.Thread(target=mynavi_search.set_keyword,args=(keyword,q,))
 			t.start()
 			ts.append(t)
-			t.join()
+			# t.join() ,,, キューがget できるまで止まる⁉ので, get 前のjoin() は不要
 			drivers.append(q.get())
 
 		# 指定したページのデータ(会社名・勤務地)を取得するスレッド
@@ -38,11 +38,12 @@ def main():
 		ts[i%t_cnt].start()
 	
 
-
 	[t.join() for t in ts]
 
 	#csvファイルをページ順に並び替える
 	pd_data = pd.read_csv("t08_Recruit_data.csv")
+
+	# page キーでソート(.sort_values() )、index を振りなおす(.reset_index)
 	sort_data = pd_data.sort_values(by=["page"])
 	pd_data = sort_data.reset_index(drop=True)
 	pd_data.to_csv("t08_Recruit_data.csv")
